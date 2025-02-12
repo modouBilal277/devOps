@@ -1,0 +1,12 @@
+fastapi
+pydantic
+pydantic-settings
+uvicorn
+beanie
+requests
+mongoengine
+Pillow
+grpcio
+grpcio-tools
+mongoengine
+

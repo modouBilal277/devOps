@@ -13,7 +13,7 @@ test_photographer:
    - pytest -p no:warnings
   services:
    - name: mongo:4.4.12
-    alias: mongo-test
+     alias: mongo-test
 
 build_photographer:
   stage: release

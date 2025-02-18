@@ -10,6 +10,7 @@ test_photographer:
   image: $CI_REGISTRY/$CI_PROJECT_PATH/photoapptest
   script:
   - cd app/photographer-service
+  - pip install pytest
   - pytest -p no:warnings
   services:
   - name: mongo:4.4.12

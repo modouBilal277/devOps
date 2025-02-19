@@ -1,7 +1,7 @@
 stages:
-- test
-- release
-- deploy
+  - test
+  - release
+  - deploy
 
 test_photographer:
   stage: test
@@ -9,11 +9,11 @@ test_photographer:
     MONGO_HOST: mongo-test
   image: $CI_REGISTRY/$CI_PROJECT_PATH/photoapptest
   script:
-   - cd app/photographer-service
-   - pytest -p no:warnings
+    - cd app/photographer-service
+    - pytest -p no:warnings
   services:
-   - name: mongo:4.4.12
-     alias: mongo-test
+    - name: mongo:4.4.12
+      alias: mongo-test
 
 build_photographer:
   stage: release

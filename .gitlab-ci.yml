@@ -57,23 +57,22 @@ test_photo:
     - name: mongo:4.4.12
       alias: mongo-test
 
-  build_photo:
-    stage: release
-    image:
-      name: gcr.io/kaniko-project/executor:debug
-      entrypoint: [""]
-    variables:
+build_photo:
+  stage: release
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
     
-    before_script:
-      - mkdir -p /kaniko/.docker
-      - echo "{\"auths\":{\"registry.gitlab.com\":{\"username\":\"gitlab-ci-token\",\"password\":\"$CI_JOB_TOKEN\"}}}" > /kaniko/.docker/config.json
+  before_script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"registry.gitlab.com\":{\"username\":\"gitlab-ci-token\",\"password\":\"$CI_JOB_TOKEN\"}}}" > /kaniko/.docker/config.json
 
-    script:
-      - >-
-        /kaniko/executor
-        --context "${CI_PROJECT_DIR}/app/photo-service"
-        --dockerfile "${CI_PROJECT_DIR}/app/photo-service/Dockerfile"
-        --destination "${CI_REGISTRY_IMAGE}/photo-service:${CI_COMMIT_SHORT_SHA}"
+  script:
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}/app/photo-service"
+      --dockerfile "${CI_PROJECT_DIR}/app/photo-service/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/photo-service:${CI_COMMIT_SHORT_SHA}"
 
 
 deploy_photo:

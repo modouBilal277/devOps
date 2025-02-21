@@ -20,9 +20,12 @@ build_photographer:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
+  variables:
+    DOCKER_CONFIG: "/kaniko/.docker"
+
   before_script:
-    - mkdir -p /kaniko/.docker
-    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
+    - echo "{\"auths\":{\"registry.gitlab.com\":{\"username\":\"gitlab-ci-token\",\"password\":\"$CI_JOB_TOKEN\"}}}" > /kaniko/.docker/config.json
+
   script:
     - >-
       /kaniko/executor

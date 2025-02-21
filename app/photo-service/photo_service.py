@@ -16,6 +16,8 @@ from photo_mongo_wrapper import *
 import requests
 import re
 
+import sys
+sys.path.append('./proto')
 import grpc
 import tags_pb2
 import tags_pb2_grpc

@@ -22,9 +22,7 @@ build_photographer:
     entrypoint: [""]
   before_script:
     - mkdir -p /kaniko/.docker
-    before_script:
-      - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
-
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
   script:
     - >-
       /kaniko/executor

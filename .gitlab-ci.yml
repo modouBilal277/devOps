@@ -45,3 +45,46 @@ deploy_photographer:
   environment:
     name: production
 
+test_photo:
+  stage: test
+  variables:
+    MONGO_HOST: mongo-test
+  image: $CI_REGISTRY/$CI_PROJECT_PATH/photoapptest
+  script:
+    - cd app/photo-service
+    - pytest -p no:warnings
+  services:
+    - name: mongo:4.4.12
+      alias: mongo-test
+
+  build_photo:
+    stage: release
+    image:
+      name: gcr.io/kaniko-project/executor:debug
+      entrypoint: [""]
+    variables:
+    
+    before_script:
+      - mkdir -p /kaniko/.docker
+      - echo "{\"auths\":{\"registry.gitlab.com\":{\"username\":\"gitlab-ci-token\",\"password\":\"$CI_JOB_TOKEN\"}}}" > /kaniko/.docker/config.json
+
+    script:
+      - >-
+        /kaniko/executor
+        --context "${CI_PROJECT_DIR}/app/photo-service"
+        --dockerfile "${CI_PROJECT_DIR}/app/photo-service/Dockerfile"
+        --destination "${CI_REGISTRY_IMAGE}/photo-service:${CI_COMMIT_SHORT_SHA}"
+
+
+deploy_photo:
+  stage: deploy
+  image:
+    name: bitnami/kubectl
+    entrypoint: [""]
+  script:
+    - cd app/photo-service
+    - sed -i "s/:latest/:${CI_COMMIT_SHORT_SHA}/g" k8s-photo-service.yml
+    - kubectl apply -f k8s-photo-service.yml
+  environment:
+    name: production
+

@@ -52,10 +52,11 @@ test_photo:
   image: $CI_REGISTRY/$CI_PROJECT_PATH/photoapptest
   script:
     - cd app/photo-service
+    - python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. ./proto/tags.proto
     - pytest -p no:warnings
   services:
     - name: mongo:4.4.12
-      alias: mongo-test
+      alias: mongo-service-test
 
 build_photo:
   stage: release

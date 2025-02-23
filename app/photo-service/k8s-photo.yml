@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: photo-service
-          image: gitlab-df-registry.imt-atlantique.fr/devops/devops-s25-100/photo:latest
+          image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/photo:latest
           env:
             - name: DATABASE_NAME
               value: "devops-s23-xy-k8s-photo-db"

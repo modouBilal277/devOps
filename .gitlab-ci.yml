@@ -96,7 +96,7 @@ test_book:
     MONGO_HOST: mongo-test
   image: $CI_REGISTRY/$CI_PROJECT_PATH/photoapptest
   script:
-    - cd app/book-service
+    - cd app/books-service
     - pytest -p no:warnings
   services:
     - name: mongo:4.4.12
@@ -115,8 +115,8 @@ build_book:
   script:
     - >-
       /kaniko/executor
-      --context "${CI_PROJECT_DIR}/app/book-service"
-      --dockerfile "${CI_PROJECT_DIR}/app/book-service/Dockerfile"
+      --context "${CI_PROJECT_DIR}/app/books-service"
+      --dockerfile "${CI_PROJECT_DIR}/app/books-service/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}/book:${CI_COMMIT_SHORT_SHA}"
 
 
@@ -126,7 +126,7 @@ deploy_book:
     name: bitnami/kubectl
     entrypoint: [""]
   script:
-    - cd app/book-service
+    - cd app/books-service
     - sed -i "s/:latest/:${CI_COMMIT_SHORT_SHA}/g" k8s-book.yml
     - kubectl apply -f k8s-book.yml
   environment:

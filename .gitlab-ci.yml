@@ -88,3 +88,46 @@ deploy_photo:
   environment:
     name: production
 
+
+
+test_book:
+  stage: test
+  variables:
+    MONGO_HOST: mongo-test
+  image: $CI_REGISTRY/$CI_PROJECT_PATH/photoapptest
+  script:
+    - cd app/book-service
+    - pytest -p no:warnings
+  services:
+    - name: mongo:4.4.12
+      alias: mongo-test
+
+
+build_book:
+  stage: release
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  variables:
+    DOCKER_CONFIG: "/kaniko/.docker"
+  before_script:
+    - echo "{\"auths\":{\"registry.gitlab.com\":{\"username\":\"gitlab-ci-token\",\"password\":\"$CI_JOB_TOKEN\"}}}" > /kaniko/.docker/config.json
+  script:
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}/app/book-service"
+      --dockerfile "${CI_PROJECT_DIR}/app/book-service/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/book:${CI_COMMIT_SHORT_SHA}"
+
+
+deploy_book:
+  stage: deploy
+  image:
+    name: bitnami/kubectl
+    entrypoint: [""]
+  script:
+    - cd app/book-service
+    - sed -i "s/:latest/:${CI_COMMIT_SHORT_SHA}/g" k8s-book.yml
+    - kubectl apply -f k8s-book.yml
+  environment:
+    name: production

@@ -1,8 +1,4 @@
 fastapi
-pydantic
-pydantic-settings
 uvicorn
+motor
 beanie
-requests
-mongoengine
-

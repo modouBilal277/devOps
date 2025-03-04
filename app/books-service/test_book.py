@@ -1,4 +1,3 @@
-import asyncio
 import pytest
 from fastapi.testclient import TestClient
 from datetime import datetime
@@ -14,20 +13,11 @@ book_data = {
     "publication_date": datetime(2022, 6, 10).isoformat()
 }
 
-# Fixture pour créer le client avec gestion du cycle de vie (startup/shutdown)
+# Fixture qui gère le cycle de vie du TestClient (startup et shutdown)
 @pytest.fixture
 def client():
     with TestClient(app) as client:
         yield client
-
-# Fixture automatique pour nettoyer la collection "books" avant chaque test
-@pytest.fixture(autouse=True)
-def clear_books_collection(client):
-    # Nettoyer avant le test
-    asyncio.run(client.app.state.db["books"].delete_many({}))
-    yield
-    # Nettoyer après le test
-    asyncio.run(client.app.state.db["books"].delete_many({}))
 
 def test_create_book(client):
     """Test pour la création d'un livre"""
@@ -41,7 +31,7 @@ def test_get_books(client):
     client.post("/books/", json=book_data)  # Ajouter un livre pour tester
     response = client.get("/books/")
     assert response.status_code == 200
-    assert len(response.json()) > 0  # Vérifier que la liste n'est pas vide
+    assert len(response.json()) > 0  # Vérifier que la liste des livres n'est pas vide
 
 def test_get_book(client):
     """Test pour récupérer un livre par ID"""

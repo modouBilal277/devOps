@@ -51,8 +51,17 @@ def test_update_book(client):
 
 def test_delete_book(client):
     """Test pour supprimer un livre"""
-    client.post("/books/", json=book_data)  # Ajouter un livre
-    response = client.delete(f"/books/{book_data['book_id']}")
+    # Utiliser un identifiant différent pour éviter le conflit avec les autres tests
+    delete_book_data = {
+        "book_id": 2,
+        "title": "DevOps Essentials",
+        "author_first_name": "Jane",
+        "author_last_name": "Doe",
+        "publisher": "Tech Books",
+        "publication_date": datetime(2022, 6, 10).isoformat()
+    }
+    client.post("/books/", json=delete_book_data)  # Ajouter un livre pour le test de suppression
+    response = client.delete(f"/books/{delete_book_data['book_id']}")
     assert response.status_code == 200
-    assert response.json()["book_id"] == book_data["book_id"]
-    assert response.json()["title"] == book_data["title"]
+    assert response.json()["book_id"] == delete_book_data["book_id"]
+    assert response.json()["title"] == delete_book_data["title"]

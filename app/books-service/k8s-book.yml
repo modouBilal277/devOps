@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service
+spec:
+  selector:
+    app: book-service
+  ports:
+  - protocol: TCP
+    port: 80
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,66 +26,31 @@ spec:
         app: book-service
     spec:
       containers:
-        - name: book-service
-          image: book-service:latest
-          ports:
-            - containerPort: 80
-          env:
-            - name: MONGO_HOST
-              value: "mongodb-service"
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: book-service
-spec:
-  selector:
-    app: book-service
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: ClusterIP
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongodb-service
-spec:
-  selector:
-    app: mongodb
-  ports:
-    - protocol: TCP
-      port: 27017
-      targetPort: 27017
-  type: ClusterIP
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mongodb
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mongodb
-  template:
-    metadata:
-      labels:
-        app: mongodb
-    spec:
-      containers:
-        - name: mongodb
-          image: mongo:latest
-          ports:
-            - containerPort: 27017
-          volumeMounts:
-            - name: mongodb-storage
-              mountPath: /data/db
-      volumes:
-        - name: mongodb-storage
-          emptyDir: {}
-
+      - name: book-service
+        image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/book:latest
+        env:
+        - name: DATABASE_NAME
+          value: "devops-s23-xy-book-db"
+        - name: AUTH_DATABASE_NAME
+          value: "devops-s23-xy-book-db"
+        - name: MONGO_HOST
+          value: "mongo.cloud.rennes.enst-bretagne.fr"
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongo
+              key: username
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo
+              key: password
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: regcred

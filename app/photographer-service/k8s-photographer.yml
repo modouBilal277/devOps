@@ -32,7 +32,7 @@ spec:
         - name: DATABASE_NAME
           value: "devops-s23-xy-photographer-db"
         - name: AUTH_DATABASE_NAME
-          value: "devops-s23-xy-photographer-db"
+          value: "admin"
         - name: MONGO_HOST
           value: "mongo.cloud.rennes.enst-bretagne.fr"
         - name: MONGO_USER

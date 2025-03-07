@@ -1,20 +1,9 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: book-service
-spec:
-  selector:
-    app: book-service
-  ports:
-  - protocol: TCP
-    port: 80
-
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: book-service
+  labels:
+    app: book-service
 spec:
   replicas: 1
   selector:
@@ -26,31 +15,46 @@ spec:
         app: book-service
     spec:
       containers:
-      - name: book-service
-        image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/book:latest
-        env:
-        - name: DATABASE_NAME
-          value: "devops-s23-xy-book-db"
-        - name: AUTH_DATABASE_NAME
-          value: "devops-s23-xy-book-db"
-        - name: MONGO_HOST
-          value: "mongo.cloud.rennes.enst-bretagne.fr"
-        - name: MONGO_USER
-          valueFrom:
-            secretKeyRef:
-              name: mongo
-              key: username
-        - name: MONGO_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mongo
-              key: password
-        imagePullPolicy: Always
-        resources:
-          limits:
-            memory: "512Mi"
-            cpu: "1"
-        ports:
-        - containerPort: 80
+        - name: book-service
+          image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/book:latest
+          env:
+            - name: DATABASE_NAME
+              value: "devops-s23-xy-book-db"
+            - name: AUTH_DATABASE_NAME
+              value: "devops-s23-xy-book-db"
+            - name: MONGO_HOST
+              value: "mongodb-service"  # Utilisation du service MongoDB Kubernetes
+            - name: MONGO_PORT
+              value: "27017"
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-root-username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-root-password
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
       imagePullSecrets:
-      - name: regcred
+        - name: regcred
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service
+spec:
+  selector:
+    app: book-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

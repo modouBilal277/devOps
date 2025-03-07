@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     mongo_user: str = ""
     mongo_password: str = ""
     database_name: str = "photographers"
-    auth_database_name: str = "photographers"
+    auth_database_name: str = "admin"
 
 
 settings = Settings()

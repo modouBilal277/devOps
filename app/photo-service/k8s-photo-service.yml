@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: book-service
+  name: photo-service
   labels:
-    app: book-service
+    app: photo-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: book-service
+      app: photo-service
   template:
     metadata:
       labels:
-        app: book-service
+        app: photo-service
     spec:
       containers:
-        - name: book-service
-          image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/book:latest
+        - name: photo-service
+          image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/photo-service:latest
           env:
             - name: DATABASE_NAME
-              value: "devops-s23-xy-book-db"
+              value: "devops-s23-xy-k8s-photo-db"
             - name: AUTH_DATABASE_NAME
-              value: "devops-s23-xy-book-db"
+              value: "devops-s23-xy-k8s-photo-db"
             - name: MONGO_HOST
-              value: "mongodb-service"  # Utilisation du service MongoDB Kubernetes
+              value: "mongodb-service"  # Utilisation du service Kubernetes
             - name: MONGO_PORT
               value: "27017"
             - name: MONGO_USER
@@ -50,10 +50,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: book-service
+  name: k8s-photo-service
 spec:
   selector:
-    app: book-service
+    app: photo-service
   ports:
     - protocol: TCP
       port: 80

@@ -1,36 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: photo-service
+  name: photographer-service
   labels:
-    app: photo-service
+    app: photographer-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: photo-service
+      app: photographer-service
   template:
     metadata:
       labels:
-        app: photo-service
+        app: photographer-service
     spec:
       containers:
-        - name: photo-service
-          image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/photo-service:latest
+        - name: photographer-service
+          image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/photographer:latest
           env:
             - name: DATABASE_NAME
-              value: "devops-s23-xy-k8s-photo-db"
+              value: "devops-s23-xy-photographer-db"
             - name: AUTH_DATABASE_NAME
-              value: "devops-s23-xy-k8s-photo-db"
+              value: "admin"
             - name: MONGO_HOST
-              value: "mongodb-service"  # Utilisation du service Kubernetes
+              value: "mongodb-service"  # Pointage vers le service MongoDB
             - name: MONGO_PORT
               value: "27017"
-            - name: PHOTOGRAPHER_HOST
-              value: "photographer-service"
-            - name: TAGS_HOST
-              value: "tags-service"
-
             - name: MONGO_USER
               valueFrom:
                 secretKeyRef:
@@ -55,48 +50,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: k8s-photo-service
+  name: photographer-service
 spec:
   selector:
-    app: photo-service
+    app: photographer-service
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: tags-service
-spec:
-  selector:
-    app: tags-service
-  ports:
-    - protocol: TCP
-      port: 50051 
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: tags-service
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: tags-service
-  template:
-    metadata:
-      labels:
-        app: tags-service
-    spec:
-      containers:
-      - name: tags-service
-        image: gitlab-registry.imt-atlantique.fr/devops-lab/shared/tags 
-        ports:
-        - containerPort: 50051  
-      imagePullSecrets:
-      - name: regcred
-
-

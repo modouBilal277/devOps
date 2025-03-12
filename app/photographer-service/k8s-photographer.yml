@@ -19,9 +19,9 @@ spec:
           image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/photographer:latest
           env:
             - name: DATABASE_NAME
-              value: "devops-retake-01-photographer-db"
+              value: "devops-s23-xy-book-db"
             - name: AUTH_DATABASE_NAME
-              value: "devops-retake-01-photographer-db"
+              value: "devops-s23-xy-book-db"
             - name: MONGO_HOST
               value: "mongodb-service"  #Pointage vers le service MongoDB
             - name: MONGO_PORT

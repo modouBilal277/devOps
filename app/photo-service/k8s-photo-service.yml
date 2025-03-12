@@ -55,7 +55,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: k8s-photo-service
+  name: photo-service
 spec:
   selector:
     app: photo-service

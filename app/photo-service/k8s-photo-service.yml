@@ -21,7 +21,7 @@ spec:
             - name: DATABASE_NAME
               value: "devops-s23-xy-k8s-photo-db"
             - name: AUTH_DATABASE_NAME
-              value: "devops-s23-xy-k8s-photo-db"
+              value: "admin"
             - name: MONGO_HOST
               value: "mongodb-service"  # Utilisation du service Kubernetes
             - name: MONGO_PORT

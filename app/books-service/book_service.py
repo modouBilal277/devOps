@@ -4,18 +4,29 @@ from typing import List
 from motor.motor_asyncio import AsyncIOMotorClient
 from models import Book
 
+# Variables d'environnement
 MONGO_HOST = os.getenv("MONGO_HOST", "mongo")
 MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
 DATABASE_NAME = os.getenv("MONGO_DB", "books_db")
 AUTH_DATABASE_NAME = os.getenv("AUTH_DATABASE_NAME", "admin")  # Base de données d'authentification
+
+# Récupérer les informations d'utilisateur et mot de passe de MongoDB
+MONGO_USER = os.getenv("")
+MONGO_PASSWORD = os.getenv("")
 
 app = FastAPI(title="Book Service")
 
 # Création du client MongoDB dans l'événement startup
 @app.on_event("startup")
 async def startup_db_client():
-    # Ajouter authSource à la chaîne de connexion pour spécifier la base de données d'authentification
-    mongo_uri = f"mongodb://{MONGO_HOST}:{MONGO_PORT}/{DATABASE_NAME}?authSource={AUTH_DATABASE_NAME}"
+    if MONGO_USER and MONGO_PASSWORD:
+        # Si les identifiants sont fournis, on les utilise dans la chaîne de connexion
+        mongo_uri = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/{DATABASE_NAME}?authSource={AUTH_DATABASE_NAME}"
+    else:
+        # Sinon, on se connecte sans utilisateur/mot de passe
+        mongo_uri = f"mongodb://{MONGO_HOST}:{MONGO_PORT}/{DATABASE_NAME}"
+
+    # Connexion à la base de données MongoDB
     app.state.mongo_client = AsyncIOMotorClient(mongo_uri)
     app.state.db = app.state.mongo_client[DATABASE_NAME]
 

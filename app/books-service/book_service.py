@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from models import Book
 
 # Variables d'environnement
-MONGO_HOST = os.getenv("MONGO_HOST", "mongo")
+MONGO_HOST = os.getenv("MONGO_HOST", "mongodb-service")
 MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
 DATABASE_NAME = os.getenv("MONGO_DB", "books_db")
 AUTH_DATABASE_NAME = os.getenv("AUTH_DATABASE_NAME", "admin")  # Base de données d'authentification

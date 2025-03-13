@@ -18,8 +18,6 @@ spec:
         - name: book-service
           image: gitlab-df-registry.imt-atlantique.fr/devops/devops-retake-01/book:latest
           env:
-            - name: DATABASE_NAME
-              value: "devops-s23-xy-book-db"
             - name: AUTH_DATABASE_NAME
               value: "admin"
             - name: MONGO_HOST

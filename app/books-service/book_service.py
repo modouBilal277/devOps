@@ -15,7 +15,7 @@ app = FastAPI(title="Book Service")
 @app.on_event("startup")
 async def startup_db_client():
     # Ajouter authSource à la chaîne de connexion pour spécifier la base de données d'authentification
-    mongo_uri = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/{DATABASE_NAME}?authSource={AUTH_DATABASE_NAME}"
+    mongo_uri = f"mongodb://{MONGO_HOST}:{MONGO_PORT}/{DATABASE_NAME}?authSource={AUTH_DATABASE_NAME}"
     app.state.mongo_client = AsyncIOMotorClient(mongo_uri)
     app.state.db = app.state.mongo_client[DATABASE_NAME]
 

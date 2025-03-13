@@ -1,0 +1,53 @@
+test 
+post : 
+
+curl --insecure -X POST https://apim-01.example.com/gateway/book/books/ \
+-H 'X-Gravitee-Api-Key: 14c0352f-8291-4186-8035-2f8291718632' \
+-H "Content-Type: application/json" \
+-d '{
+  "book_id": 4,
+  "title": "DevOps",
+  "author_first_name": "F. Scott",
+  "author_last_name": "Fitzgerald",
+  "publisher": "Scribner",
+  "publication_date": "1925-04-10T00:00:00"
+}'
+
+get pour un livre : 
+
+curl --insecure -X GET https://apim-01.example.com/gateway/book/books/4 \
+-H 'X-Gravitee-Api-Key: 14c0352f-8291-4186-8035-2f8291718632'
+
+
+put  : 
+
+curl --insecure -X PUT https://apim-01.example.com/gateway/book/books/3 \
+-H 'X-Gravitee-Api-Key: 14c0352f-8291-4186-8035-2f8291718632' \
+-H "Content-Type: application/json" \
+-d '{
+  "book_id": 4,
+  "title": "Cloud Computing",
+  "author_first_name": "F. Scott",
+  "author_last_name": "Fitzgerald",
+  "publisher": "Scribner",
+  "publication_date": "1925-04-10T00:00:00"
+}'
+
+
+get pour tous les livres :
+
+curl --insecure -X GET https://apim-01.example.com/gateway/book/books/ \
+-H 'X-Gravitee-Api-Key: 14c0352f-8291-4186-8035-2f8291718632'
+
+
+delete ce livre : 
+curl --insecure -X DELETE https://apim-01.example.com/gateway/book/books/3 \
+-H 'X-Gravitee-Api-Key: 14c0352f-8291-4186-8035-2f8291718632'
+
+
+
+
+
+
+
+

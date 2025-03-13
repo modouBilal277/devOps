@@ -11,8 +11,8 @@ DATABASE_NAME = os.getenv("MONGO_DB", "books_db")
 AUTH_DATABASE_NAME = os.getenv("AUTH_DATABASE_NAME", "admin")  # Base de données d'authentification
 
 # Récupérer les informations d'utilisateur et mot de passe de MongoDB
-MONGO_USER = os.getenv("")
-MONGO_PASSWORD = os.getenv("")
+MONGO_USER = os.getenv("MONGO_USER")
+MONGO_PASSWORD = os.getenv("MONGO_PASSWORD")
 
 app = FastAPI(title="Book Service")
 

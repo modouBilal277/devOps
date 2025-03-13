@@ -7,13 +7,16 @@ from models import Book
 MONGO_HOST = os.getenv("MONGO_HOST", "mongo")
 MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
 DATABASE_NAME = os.getenv("MONGO_DB", "books_db")
+AUTH_DATABASE_NAME = os.getenv("AUTH_DATABASE_NAME", "admin")  # Base de données d'authentification
 
 app = FastAPI(title="Book Service")
 
 # Création du client MongoDB dans l'événement startup
 @app.on_event("startup")
 async def startup_db_client():
-    app.state.mongo_client = AsyncIOMotorClient(f"mongodb://{MONGO_HOST}:{MONGO_PORT}")
+    # Ajouter authSource à la chaîne de connexion pour spécifier la base de données d'authentification
+    mongo_uri = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/{DATABASE_NAME}?authSource={AUTH_DATABASE_NAME}"
+    app.state.mongo_client = AsyncIOMotorClient(mongo_uri)
     app.state.db = app.state.mongo_client[DATABASE_NAME]
 
 # Fermeture du client MongoDB lors du shutdown de l'application
@@ -67,4 +70,3 @@ async def delete_book(book_id: int):
         raise HTTPException(status_code=404, detail="Book not found")
     await collection.delete_one({"book_id": book_id})
     return Book(**book)
-
